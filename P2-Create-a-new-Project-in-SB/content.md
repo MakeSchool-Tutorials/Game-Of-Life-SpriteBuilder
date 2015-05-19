@@ -13,7 +13,7 @@ can't find your project in Finder, search for it using Spotlight at the
 top right of your screen. The folder structure should look something
 like this:
 
-![image](./spritebuilder_project_structue.png)
+![image](./spritebuilder_project_structure.png)
 
 SpriteBuilder created a new folder (GameOfLife.spritebuilder). Inside it
 are a SpriteBuilder project (GameOfLife.ccbproj) and a new Xcode project
