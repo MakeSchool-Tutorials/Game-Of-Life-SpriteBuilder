@@ -1,7 +1,7 @@
 ---
 title: Finish the Game of Life!
 slug: game-of-life-code
----       
+---
 
 Time to code! In this step we are going to hook up the UI we've created
 in SpriteBuilder with the game logic we're going to code in Xcode.
@@ -13,7 +13,7 @@ First of all let's create the *Grid* class which we just set as a custom
 class in SpriteBuilder. Create a new Objective-C class in Xcode and make
 it a subclass of *CCSprite*:
 
-![image](https://s3.amazonaws.com/mgwu-misc/GameOfLife+SpriteBuilder+Tutorial/GOF-GridClass.png)
+![image](./GOF-GridClass.png)
 
 Create a Creature class
 =======================
@@ -52,11 +52,11 @@ Open *Creature.m* and add this method between <*@implementation>\* and
     - (instancetype)initCreature {
       // since we made Creature inherit from CCSprite, 'super' below refers to CCSprite
       self = [super initWithImageNamed:@"GameOfLifeAssets/Assets/bubble.png"];
-      
+
       if (self) {
         self.isAlive = NO;
       }
-      
+
       return self;
     }
 
@@ -74,7 +74,7 @@ line:
     - (void)setIsAlive:(BOOL)newState {
       //when you create an @property as we did in the .h, an instance variable with a leading underscore is automatically created for you
       _isAlive = newState;
-      
+
       // 'visible' is a property of any class that inherits from CCNode. CCSprite is a subclass of CCNode, and Creature is a subclass of CCSprite, so Creatures have a visible property
       self.visible = _isAlive;
     }
@@ -129,9 +129,9 @@ call the *setupGrid* method we are going to write next:
     - (void)onEnter
     {
       [super onEnter];
-      
+
       [self setupGrid];
-      
+
       // accept touches on the grid
       self.userInteractionEnabled = YES;
     }
@@ -146,34 +146,34 @@ before <*@end*>:
       // divide the grid's size by the number of columns/rows to figure out the right width and height of each cell
       _cellWidth = self.contentSize.width / GRID_COLUMNS;
       _cellHeight = self.contentSize.height / GRID_ROWS;
-      
+
       float x = 0;
       float y = 0;
-      
+
       // initialize the array as a blank NSMutableArray
       _gridArray = [NSMutableArray array];
-      
+
       // initialize Creatures
       for (int i = 0; i < GRID_ROWS; i++) {
         // this is how you create two dimensional arrays in Objective-C. You put arrays into arrays.
         _gridArray[i] = [NSMutableArray array];
         x = 0;
-        
+
         for (int j = 0; j < GRID_COLUMNS; j++) {
           Creature *creature = [[Creature alloc] initCreature];
           creature.anchorPoint = ccp(0, 0);
           creature.position = ccp(x, y);
           [self addChild:creature];
-          
+
           // this is shorthand to access an array inside an array
           _gridArray[i][j] = creature;
-          
+
           // make creatures visible to test this method, remove this once we know we have filled the grid properly
           creature.isAlive = YES;
-          
+
           x+=_cellWidth;
         }
-        
+
         y += _cellHeight;
       }
     }
@@ -212,7 +212,7 @@ following method to your Grid.m:
     {
         //get the x,y coordinates of the touch
         CGPoint touchLocation = [touch locationInNode:self];
-    
+
         //get the Creature at that location
         Creature *creature = [self creatureForTouchPosition:touchLocation];
 
@@ -234,7 +234,7 @@ on them.
 Now let's create creatureForTouchPosition. First, create an empty
 method:
 
-    - (Creature *)creatureForTouchPosition:(CGPoint)touchPosition 
+    - (Creature *)creatureForTouchPosition:(CGPoint)touchPosition
     {
        //get the row and column that was touched, return the Creature inside the corresponding cell
     }
@@ -276,11 +276,11 @@ Replace the content of *MainScene.m* with these lines:
     - (id)init
     {
         self = [super init];
-        
+
         if (self) {
             _timer = [[CCTimer alloc] init];
         }
-        
+
         return self;
     }
 
@@ -350,31 +350,31 @@ with the following code:
 
     // iterate through the rows
     // note that NSArray has a method 'count' that will return the number of elements in the array
-    for (int i = 0; i < [_gridArray count]; i++) 
+    for (int i = 0; i < [_gridArray count]; i++)
     {
       // iterate through all the columns for a given row
-      for (int j = 0; j < [_gridArray[i] count]; j++) 
+      for (int j = 0; j < [_gridArray[i] count]; j++)
       {
         // access the creature in the cell that corresponds to the current row/column
         Creature *currentCreature = _gridArray[i][j];
-        
-        // remember that every creature has a 'livingNeighbors' property that we created earlier 
+
+        // remember that every creature has a 'livingNeighbors' property that we created earlier
         currentCreature.livingNeighbors = 0;
-        
+
         // now examine every cell around the current one
-        
+
         // go through the row on top of the current cell, the row the cell is in, and the row past the current cell
-        for (int x = (i-1); x <= (i+1); x++) 
+        for (int x = (i-1); x <= (i+1); x++)
         {
           // go through the column to the left of the current cell, the column the cell is in, and the column to the right of the current cell
-          for (int y = (j-1); y <= (j+1); y++) 
+          for (int y = (j-1); y <= (j+1); y++)
           {
             // check that the cell we're checking isn't off the screen
             BOOL isIndexValid;
             isIndexValid = [self isIndexValidForX:x andY:y];
-            
+
             // skip over all cells that are off screen AND the cell that contains the creature we are currently updating
-            if (!((x == i) && (y == j)) && isIndexValid) 
+            if (!((x == i) && (y == j)) && isIndexValid)
             {
                 Creature *neighbor = _gridArray[x][y];
                 if (neighbor.isAlive)
@@ -433,4 +433,4 @@ Just in case you get stuck
 ==========================
 
 You can find the solution for this tutorial on
-[GitHub.](https://github.com/MakeGamesWithUs/GameOfLife.spritebuilder)
+[GitHub.](https://github.com/MakeSchool/GameOfLife-Spritebuilder)
